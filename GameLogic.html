@@ -1,0 +1,155 @@
+<script>
+    const wordBank = ["HERO", "LASER", "OZONE", "BEAST", "ALIEN", "CODE", "ROBOT"];
+    let targetWord = "";
+    let currentIndex = 0;
+    let currentBits = [0, 0, 0, 0, 0, 0, 0, 0];
+    let isTransitioning = false;
+
+    // DOM Elements
+    const buttons = document.querySelectorAll('.bit-btn');
+    const elIncomingCode = document.getElementById('incoming-code');
+    const elActiveBinary = document.getElementById('active-binary');
+    const elDecodeString = document.getElementById('decode-string');
+    const elCodecBody = document.getElementById('codec-body');
+    const heroPortal = document.getElementById('hero-portal');
+    const chargeRing = document.getElementById('charge-ring');
+    const elCurrentInputValue = document.getElementById('current-input-value');
+
+    // Overlay Elements
+    const splashScreen = document.getElementById('splash-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const endScreen = document.getElementById('end-screen');
+    const btnStart = document.getElementById('btn-start');
+    const laserBeam = document.getElementById('laser-beam');
+    const enemyFinale = document.getElementById('enemy-finale');
+    const victoryText = document.getElementById('victory-text');
+
+    // Start Sequence - Random Word Gen
+    btnStart.addEventListener('click', () => {
+        // Pick random word
+        targetWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+        currentIndex = 0;
+        elCodecBody.innerHTML = ''; // Clear table for new game
+
+        resetToggles();
+        updateTargetUI();
+
+        splashScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+    });
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (isTransitioning) return;
+
+            const bitPos = parseInt(btn.getAttribute('data-bit'));
+
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                btn.innerText = '0';
+                currentBits[bitPos] = 0;
+            } else {
+                btn.classList.add('active');
+                btn.innerText = '1';
+                currentBits[bitPos] = 1;
+            }
+
+            updateReadouts();
+        });
+    });
+
+    function updateReadouts() {
+        let sum = 0;
+        buttons.forEach(btn => {
+            if (btn.classList.contains('active')) sum += parseInt(btn.getAttribute('data-val'));
+        });
+
+        const binString = [...currentBits].reverse().join('');
+        elActiveBinary.innerText = binString;
+        elCurrentInputValue.innerText = sum;
+
+        const targetChar = targetWord.charCodeAt(currentIndex);
+        if (sum === targetChar) {
+            handleSuccess(sum, binString, targetWord[currentIndex]);
+        }
+    }
+
+    function handleSuccess(dec, bin, char) {
+        isTransitioning = true;
+
+        const hex = dec.toString(16).toUpperCase().padStart(2, '0');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${dec}</td><td class="binary-col">${bin}</td><td>${hex}</td><td>${char}</td>`;
+        elCodecBody.appendChild(tr);
+
+        currentIndex++;
+        const powerLevel = currentIndex / targetWord.length;
+
+        heroPortal.style.boxShadow = `0 0 ${15 + (powerLevel * 40)}px rgba(255, 0, 255, ${0.3 + (powerLevel * 0.7)})`;
+        chargeRing.style.setProperty('--pulse-opacity', 0.2 + (powerLevel * 0.8));
+        chargeRing.style.setProperty('--pulse-scale', 2 + (powerLevel * 2));
+
+        if (powerLevel >= 1) {
+            heroPortal.style.borderColor = "var(--neon-cyan)";
+            heroPortal.style.background = "rgba(0, 255, 255, 0.2)";
+        }
+
+        setTimeout(() => {
+            resetToggles();
+            updateTargetUI();
+            isTransitioning = false;
+
+            if (currentIndex >= targetWord.length) {
+                elIncomingCode.innerText = "SYSTEM ARMED";
+                elIncomingCode.style.color = "var(--neon-lime)";
+                elActiveBinary.innerText = "READY TO FIRE";
+                isTransitioning = true;
+                setTimeout(triggerFinale, 1500);
+            }
+        }, 1000);
+    }
+
+    function updateTargetUI() {
+        let decodeArr = [];
+        for (let i = 0; i < targetWord.length; i++) {
+            if (i < currentIndex) decodeArr.push(targetWord[i]);
+            else decodeArr.push("_");
+        }
+        elDecodeString.innerText = decodeArr.join(" ");
+
+        if (currentIndex < targetWord.length) {
+            elIncomingCode.innerText = targetWord.charCodeAt(currentIndex);
+        }
+    }
+
+    function resetToggles() {
+        currentBits = [0, 0, 0, 0, 0, 0, 0, 0];
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.innerText = '0';
+        });
+        elActiveBinary.innerText = "00000000";
+        elCurrentInputValue.innerText = "0";
+    }
+
+    function triggerFinale() {
+        gameScreen.classList.add('hidden');
+        endScreen.classList.remove('hidden');
+
+        setTimeout(() => {
+            laserBeam.classList.add('fire-laser');
+            enemyFinale.classList.add('fartzilla-death');
+
+            setTimeout(() => {
+                enemyFinale.innerText = '💥';
+                enemyFinale.style.animation = 'none';
+                enemyFinale.style.transform = 'scale(2)';
+                enemyFinale.style.opacity = '1';
+
+                setTimeout(() => {
+                    victoryText.classList.add('show');
+                }, 500);
+            }, 1500);
+        }, 1000);
+    }
+</script>

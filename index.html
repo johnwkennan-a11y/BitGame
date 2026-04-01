@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GasBlastron Decoder</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <!-- Inject the CSS from Stylesheet.html -->
+    <?!= include('Stylesheet'); ?>
+</head>
+
+<body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen" class="overlay">
+        <h1 class="story-title">CRITICAL ALERT</h1>
+        <p class="story-text">
+            The city perimeter has been breached by <strong>Fartzilla</strong>. Toxic gas levels are reaching critical
+            mass, ruining all outdoor spaces!
+            <br><br>
+            You must manually override the mainframe and input the binary activation codes to power up the
+            <strong>GasBlastron Mecha</strong>. Decode the signal before it's too late!
+        </p>
+        <button id="btn-start" class="action-btn">START SEQUENCE</button>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen" class="console-container hidden">
+        <div class="portals-wrapper">
+            <div class="portal-container">
+                <div class="portal-title">Fartzilla Meter</div>
+                <div class="portal portal-enemy">
+                    <div class="gas-cloud">💨</div>
+                    <div class="gas-cloud">💨</div>
+                    <div class="fartzilla">🦖</div>
+                </div>
+            </div>
+            <div class="portal-container">
+                <div class="portal-title">GasBlastron Status</div>
+                <div class="portal portal-hero" id="hero-portal">
+                    <div class="charge-ring" id="charge-ring"></div>
+                    <div class="gasblastron">🤖</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-line">Incoming Code: <span class="highlight-target" id="incoming-code">0</span></div>
+            <div class="info-line">Active Binary: <span class="highlight" id="active-binary">00000000</span></div>
+            <div class="info-line" style="margin-top: 15px;">Decode String: <span class="highlight" id="decode-string">_
+                    _ _ _ _</span></div>
+        </div>
+
+        <div class="codec-section">
+            <div class="section-title">GasBlastron CODEC</div>
+            <table class="codec-table">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Binary</th>
+                        <th>Hex</th>
+                        <th>Letter</th>
+                    </tr>
+                </thead>
+                <tbody id="codec-body"></tbody>
+            </table>
+        </div>
+
+        <div class="codec-section">
+            <div class="section-title">Binary Input Panel Value: <span id="current-input-value"
+                    class="highlight">0</span></div>
+            <div class="toggles-grid">
+                <div class="bit-wrapper"><button class="bit-btn" data-val="128" data-bit="7">0</button>
+                    <div class="bit-value">128</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="64" data-bit="6">0</button>
+                    <div class="bit-value">64</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="32" data-bit="5">0</button>
+                    <div class="bit-value">32</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="16" data-bit="4">0</button>
+                    <div class="bit-value">16</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="8" data-bit="3">0</button>
+                    <div class="bit-value">8</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="4" data-bit="2">0</button>
+                    <div class="bit-value">4</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="2" data-bit="1">0</button>
+                    <div class="bit-value">2</div>
+                </div>
+                <div class="bit-wrapper"><button class="bit-btn" data-val="1" data-bit="0">0</button>
+                    <div class="bit-value">1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENDING SCREEN -->
+    <div id="end-screen" class="overlay hidden">
+        <div class="finale-scene">
+            <div class="hero-finale">🤖</div>
+            <div id="laser-beam" class="laser-beam"></div>
+            <div id="enemy-finale" class="enemy-finale">🦖</div>
+        </div>
+        <div id="victory-text" class="victory-text">THREAT NEUTRALIZED!</div>
+    </div>
+
+    <!-- Inject the JavaScript from GameLogic.html -->
+    <?!= include('GameLogic'); ?>
+
+</body>
+
+</html>
