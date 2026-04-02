@@ -8,7 +8,7 @@
     // --- GAME TIMER & STATE ---
     let timerInterval = null;
     let timeElapsed = 0;
-    const TIME_LIMIT = 60; // 60 seconds strict timer
+    const TIME_LIMIT = 90; // 90 seconds strict timer
     let gameIsOver = false;
 
     // --- AUDIO SYNTH ENGINE ---
@@ -98,7 +98,20 @@
 
     // Start Sequence
     btnStart.addEventListener('click', startGame);
-    btnRestart.addEventListener('click', () => location.reload());
+    btnRestart.addEventListener('click', () => {
+        // Apps Script iframes lock down window.location reload, so we manually soft-reset the DOM layers.
+        gameoverScreen.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        gameScreen.classList.add('hidden');
+        splashScreen.classList.remove('hidden');
+
+        resetToggles();
+        elCodecBody.innerHTML = '';
+        heroPortal.style.boxShadow = '';
+        heroPortal.style.borderColor = 'var(--neon-magenta)';
+        heroPortal.style.background = '#000';
+        elIncomingCode.style.color = 'var(--neon-magenta)';
+    });
 
     function startGame() {
         AudioEngine.init();
