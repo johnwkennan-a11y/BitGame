@@ -27,6 +27,16 @@
             You must manually override the mainframe and input the binary activation codes to power up the
             <strong>GasBlastron Mecha</strong>. Decode the signal before it's too late!
         </p>
+
+        <div class="instructions-box">
+            <h3>[ HOW TO PLAY ]</h3>
+            <ul>
+                <li>The console will give you an incoming <strong>Decimal Number</strong>.</li>
+                <li>Click the 8 toggle buttons below to add up their binary values (128, 64, 32...) until they perfectly <strong>match</strong> the target number.</li>
+                <li>Decode the full sequence before the 60-second <strong>Fartzilla Meter</strong> reaches 100%!</li>
+            </ul>
+        </div>
+
         <button id="btn-start" class="action-btn">START SEQUENCE</button>
     </div>
 
@@ -35,10 +45,14 @@
         <div class="portals-wrapper">
             <div class="portal-container">
                 <div class="portal-title">Fartzilla Meter</div>
-                <div class="portal portal-enemy">
+                <div class="portal portal-enemy" id="enemy-portal">
                     <div class="gas-cloud">💨</div>
                     <div class="gas-cloud">💨</div>
                     <div class="fartzilla">🦖</div>
+                </div>
+                <!-- Boss Timer Gas Meter -->
+                <div class="gas-meter-container">
+                    <div class="gas-meter-fill" id="gas-meter-fill"></div>
                 </div>
             </div>
             <div class="portal-container">
@@ -112,6 +126,14 @@
             <div id="enemy-finale" class="enemy-finale">🦖</div>
         </div>
         <div id="victory-text" class="victory-text">THREAT NEUTRALIZED!</div>
+    </div>
+
+    <!-- GAME OVER SCREEN (Added for timer defeat) -->
+    <div id="gameover-screen" class="overlay hidden">
+        <h1 class="story-title" style="color: var(--neon-magenta);">THREAT LEVEL CRITICAL</h1>
+        <p class="story-text">Fartzilla has overwhelmed the atmosphere. Toxicity reaches 100%. The system failed...</p>
+        <div class="fartzilla fartzilla-win" style="font-size: 6rem;">🦖💨💨</div>
+        <button id="btn-restart" class="action-btn">REBOOT SYSTEM</button>
     </div>
 
     <!-- Inject the JavaScript from GameLogic.html -->
