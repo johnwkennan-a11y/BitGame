@@ -5,10 +5,7 @@
     let currentBits = [0, 0, 0, 0, 0, 0, 0, 0];
     let isTransitioning = false;
 
-    // --- GAME TIMER & STATE ---
-    let timerInterval = null;
-    let timeElapsed = 0;
-    const TIME_LIMIT = 90; // 90 seconds strict timer
+    // --- GAME STATE ---
     let gameIsOver = false;
 
     // --- AUDIO SYNTH ENGINE ---
@@ -89,7 +86,6 @@
     const splashScreen = document.getElementById('splash-screen');
     const gameScreen = document.getElementById('game-screen');
     const endScreen = document.getElementById('end-screen');
-    const gameoverScreen = document.getElementById('gameover-screen');
     const btnStart = document.getElementById('btn-start');
     const btnRestart = document.getElementById('btn-restart');
     const laserBeam = document.getElementById('laser-beam');
@@ -100,7 +96,6 @@
     btnStart.addEventListener('click', startGame);
     btnRestart.addEventListener('click', () => {
         // Apps Script iframes lock down window.location reload, so we manually soft-reset the DOM layers.
-        gameoverScreen.classList.add('hidden');
         endScreen.classList.add('hidden');
         gameScreen.classList.add('hidden');
         splashScreen.classList.remove('hidden');
@@ -117,40 +112,14 @@
         AudioEngine.init();
         targetWord = wordBank[Math.floor(Math.random() * wordBank.length)];
         currentIndex = 0;
-        timeElapsed = 0;
         gameIsOver = false;
         elCodecBody.innerHTML = '';
-        elGasMeterFill.style.width = '0%';
-        elGasMeterFill.className = 'gas-meter-fill';
 
         resetToggles();
         updateTargetUI();
 
         splashScreen.classList.add('hidden');
         gameScreen.classList.remove('hidden');
-
-        // Start Boss Timer
-        if(timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(gameTick, 1000);
-    }
-
-    function gameTick() {
-        if (gameIsOver) return;
-        timeElapsed++;
-        let percentage = (timeElapsed / TIME_LIMIT) * 100;
-        
-        if (percentage >= 100) {
-            percentage = 100;
-            triggerGameOver();
-        }
-
-        elGasMeterFill.style.width = percentage + '%';
-
-        if (percentage > 85) {
-            elGasMeterFill.classList.add('gas-meter-critical');
-        } else if (percentage > 60) {
-            elGasMeterFill.classList.add('gas-meter-warning');
-        }
     }
 
     buttons.forEach(btn => {
@@ -220,7 +189,6 @@
 
             if (currentIndex >= targetWord.length && !gameIsOver) {
                 gameIsOver = true;
-                clearInterval(timerInterval);
                 elIncomingCode.innerText = "SYSTEM ARMED";
                 elIncomingCode.style.color = "var(--neon-lime)";
                 elActiveBinary.innerText = "READY TO FIRE";
@@ -251,15 +219,6 @@
         });
         elActiveBinary.innerText = "00000000";
         elCurrentInputValue.innerText = "0";
-    }
-
-    function triggerGameOver() {
-        if(gameIsOver) return;
-        gameIsOver = true;
-        clearInterval(timerInterval);
-        AudioEngine.fartGameOver();
-        gameScreen.classList.add('hidden');
-        gameoverScreen.classList.remove('hidden');
     }
 
     function triggerFinale() {
