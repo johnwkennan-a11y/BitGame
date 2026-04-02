@@ -7,6 +7,7 @@
 
     // --- GAME STATE ---
     let gameIsOver = false;
+    let isLiveGame = false;
 
     // --- AUDIO SYNTH ENGINE ---
     const AudioEngine = {
@@ -87,19 +88,36 @@
     const gameScreen = document.getElementById('game-screen');
     const endScreen = document.getElementById('end-screen');
     const btnStart = document.getElementById('btn-start');
+    const btnLiveStart = document.getElementById('btn-live-start');
     const btnRestart = document.getElementById('btn-restart');
     const laserBeam = document.getElementById('laser-beam');
     const enemyFinale = document.getElementById('enemy-finale');
     const victoryText = document.getElementById('victory-text');
+    const trainingModule = document.getElementById('training-module');
+    const liveModule = document.getElementById('live-module');
 
     // Start Sequence
-    btnStart.addEventListener('click', startGame);
+    btnStart.addEventListener('click', enterSimulator);
+    btnLiveStart.addEventListener('click', startGame);
+
+    function enterSimulator() {
+        AudioEngine.init();
+        isLiveGame = false;
+        trainingModule.classList.remove('hidden');
+        liveModule.classList.add('hidden');
+        resetToggles();
+
+        splashScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+    }
+
     btnRestart.addEventListener('click', () => {
         // Apps Script iframes lock down window.location reload, so we manually soft-reset the DOM layers.
         endScreen.classList.add('hidden');
         gameScreen.classList.add('hidden');
         splashScreen.classList.remove('hidden');
 
+        isLiveGame = false;
         resetToggles();
         elCodecBody.innerHTML = '';
         heroPortal.style.boxShadow = '';
@@ -110,6 +128,7 @@
 
     function startGame() {
         AudioEngine.init();
+        isLiveGame = true;
         targetWord = wordBank[Math.floor(Math.random() * wordBank.length)];
         currentIndex = 0;
         gameIsOver = false;
@@ -118,8 +137,8 @@
         resetToggles();
         updateTargetUI();
 
-        splashScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
+        trainingModule.classList.add('hidden');
+        liveModule.classList.remove('hidden');
     }
 
     buttons.forEach(btn => {
@@ -155,9 +174,11 @@
         elActiveBinary.innerText = binString;
         elCurrentInputValue.innerText = sum;
 
-        const targetChar = targetWord.charCodeAt(currentIndex);
-        if (sum === targetChar) {
-            handleSuccess(sum, binString, targetWord[currentIndex]);
+        if (isLiveGame) {
+            const targetChar = targetWord.charCodeAt(currentIndex);
+            if (sum === targetChar) {
+                handleSuccess(sum, binString, targetWord[currentIndex]);
+            }
         }
     }
 

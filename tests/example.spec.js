@@ -12,6 +12,10 @@ test.describe('GasBlastron Decoder Tests', () => {
     await page.locator('#btn-start').click();
 
     await expect(page.locator('#game-screen')).not.toHaveClass(/hidden/);
+    await expect(page.locator('#training-module')).not.toHaveClass(/hidden/);
+    
+    await page.locator('#btn-live-start').click();
+    await expect(page.locator('#live-module')).not.toHaveClass(/hidden/);
     
     for (let attempts = 0; attempts < 15; attempts++) {
         const incomingEl = page.locator('#incoming-code');
