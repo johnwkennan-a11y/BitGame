@@ -110,9 +110,9 @@
     .bit-value { font-size: 1.2rem; color: #bbb; font-weight: bold; margin-top: 8px; }
 
     .overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 10, 15, 0.98);
-      z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 20px; box-sizing: border-box;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100%; overflow-y: auto; background: rgba(9, 10, 15, 0.98);
+      z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      text-align: center; padding: 60px 20px; box-sizing: border-box;
     }
     .hidden { display: none !important; }
     .story-title { font-size: 3rem; color: var(--neon-magenta); text-shadow: 0 0 15px var(--neon-magenta); margin-bottom: 20px; font-family: 'VT323', monospace; }
@@ -152,5 +152,30 @@
       0%, 20%, 40%, 60%, 80% { transform: translateX(10px) rotate(10deg); filter: drop-shadow(0 0 20px red); }
       10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) rotate(-10deg); filter: drop-shadow(0 0 20px red); }
       100% { transform: scale(0); opacity: 0; }
+    }
+
+    @media (max-width: 650px) {
+      body { padding: 10px 0; }
+      .console-container { padding: 15px 10px; width: 98%; }
+      .story-title { font-size: 2.2rem; margin-bottom: 10px; }
+      .story-text { font-size: 1rem; margin-bottom: 15px; line-height: 1.4; }
+      .instructions-box { padding: 10px 15px; margin-bottom: 20px; }
+      .instructions-box h3 { font-size: 1.5rem; margin-bottom: 10px; }
+      .instructions-box ul { font-size: 0.95rem; line-height: 1.4; }
+      .action-btn { font-size: 1.5rem; padding: 12px 20px; }
+      
+      .codec-table { font-size: 1rem; }
+      .codec-table th, .codec-table td { padding: 5px; }
+      
+      .toggles-grid { gap: 8px; padding: 10px; }
+      .bit-btn { font-size: 1.2rem; border-width: 1px; }
+      .bit-value { font-size: 0.9rem; margin-top: 5px; }
+      
+      .portal-title { font-size: 0.9rem; }
+      .portal { height: 70px; font-size: 2rem; }
+      
+      .finale-scene { font-size: 3rem; margin-bottom: 20px; }
+      .victory-text { font-size: 2rem; }
+      .overlay { justify-content: flex-start; padding-top: 30px; }
     }
   </style>
